@@ -1,0 +1,17 @@
+#these are configs i have changed, rest will be default except elasticsearch output, which i commented out
+filebeat.inputs:
+# filestream is an input for collecting log messages from files.
+- type: filestream
+
+  # Change to true to enable this input configuration.
+  enabled: true
+
+  # Paths that should be crawled and fetched. Glob based paths.
+  paths:
+    - /var/log/nginx/access.log
+    #- c:\programdata\elasticsearch\logs\*
+  tags: ["project_name"]
+
+  output.logstash:
+  # The Logstash hosts
+  hosts: ["1.2.3.4:5044"]
