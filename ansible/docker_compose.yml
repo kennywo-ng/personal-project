@@ -1,0 +1,46 @@
+    - shell: |
+        git stash
+        git pull
+        printf "\n"
+        echo "===Branch==="
+        git branch
+      args:
+        chdir: "{{ repo }}"
+      register: git_pull_result
+
+    - file:
+        path: "{{ repo }}"
+        owner: "{{ owner }}"
+        group: "{{ owner }}"
+        recurse: yes
+
+    - debug:
+        var: git_pull_result.stdout_lines   
+
+    - name: Stop Docker
+      shell: |
+        docker stop "{{ docker_name }}"
+        docker rm "{{ docker_name }}"
+      ignore_errors: yes
+
+    - name: Remove Files
+      file:
+        path: '{{ item }}'
+        state: absent
+      with_items:
+        - "{{ repo }}/aff/.output/"
+        - "{{ repo }}/aff/.nuxt/"
+      when: type == "aff"
+
+
+    - name: Remove Files
+      file:
+        path: '{{ item }}'
+        state: absent
+      with_items:
+        - "{{ repo }}/web/.output/"
+        - "{{ repo }}/web/.nuxt/"
+      when: type == "web"
+
+    - name: Start Docker
+      shell: docker-compose -f "{{ docker_compose_file }}" up -d "{{ services }}"

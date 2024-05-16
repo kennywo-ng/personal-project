@@ -1,0 +1,77 @@
+---
+- name: Git Pull and Docker Compose
+  hosts: "{{ target_server }}"
+  become: yes
+  become_user: root
+  tasks:
+    - name: Get IP
+      shell: curl icanhazip.com
+      register: ip_addr
+      ignore_errors: yes
+
+    #Output IP address and Environment
+    - name: Display IP
+      debug:
+        msg: "IP: {{ ip_addr.stdout_lines }}    Env: {{ Environment }}"
+
+
+    #Set variable based on Stage and Prod
+    - name: Set var for Prod
+      set_fact:
+        docker_name1: "{{ inventory_hostname }}-web-1"
+        docker_name2: "{{ inventory_hostname }}-web-2"
+        docker_compose_file1: "/app/web1/{{ repo_name }}/web/docker/{{ inventory_hostname }}/docker-compose.prod.yml"
+        docker_compose_file2: "/app/web2/{{ repo_name }}/web/docker/{{ inventory_hostname }}/docker-compose.prod.yml"
+        services1: "web1"
+        services2: "web2"
+        repo1: "/app/web1/{{ repo_name }}"
+        repo2: "/app/web2/{{ repo_name }}"
+      when: Environment == "prod"
+
+    - name: Set var for Stage
+      set_fact:
+        docker_name1: "{{ inventory_hostname }}-web"
+        docker_compose_file1: "/app/{{ repo_name }}/web/docker/{{ inventory_hostname }}/docker-compose.stage.yml"
+        services1: "web"
+        repo1: "/app/{{ repo_name }}"
+      when: Environment == "stage"
+    
+
+    
+    - name: Docker_compose
+      include_tasks: docker_compose.yml
+      vars:
+        docker_name: "{{ docker_name1 }}"
+        docker_compose_file: "{{ docker_compose_file1 }}"
+        services: "{{ services1 }}"
+        repo: "{{ repo1 }}"
+        type: "web"
+        owner: "nginx"
+      when: Environment == "stage" or Environment == "prod"
+
+
+
+    - name: Pause before second deploy
+      pause:
+        seconds: 200  # Adjust the sleep duration as needed
+      when: Environment == "prod"
+
+
+
+    - name: Docker Compose 2
+      include_tasks: docker_compose.yml
+      vars:
+        docker_name: "{{ docker_name2 }}"
+        docker_compose_file: "{{ docker_compose_file2 }}"
+        services: "{{ services2 }}"
+        repo: "{{ repo2 }}"
+        type: "web"
+        owner: "nginx"
+      when: Environment == "prod"
+
+
+
+    - name: Finishing deployment
+      pause:
+        seconds: 80  # Adjust the sleep duration as needed
+      when: Environment == "prod"

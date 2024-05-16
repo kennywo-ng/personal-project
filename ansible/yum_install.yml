@@ -1,0 +1,27 @@
+---
+- name: Switch PHP Versions and Install php-zip
+  hosts: backend_prod
+  become: yes
+  become_user: root
+
+  tasks:
+    - name: Disable PHP 8.0
+      command: yum-config-manager --disable remi-php80
+
+    - name: Enable PHP 7.2
+      command: yum-config-manager --enable remi-php72
+
+    - name: Install php-zip for PHP 7.2
+      yum:
+        name: php-zip
+        state: present
+
+    - name: Restart PHP-FPM
+      service:
+        name: php-fpm
+        state: restarted
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted

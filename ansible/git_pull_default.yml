@@ -1,0 +1,35 @@
+---
+- name: Git Pull or Clone
+  hosts: "{{ target_server }}"
+  gather_facts: false
+  become: yes
+  become_user: root  # Replace with the user that has sudo privileges
+
+  tasks:
+    - name: Get IP
+      shell: curl icanhazip.com
+      register: ip_addr
+
+    #Output IP address and Environment
+    - name: Display IP
+      debug:
+        msg: "IP: {{ ip_addr.stdout_lines }}"
+
+    #Reveal last commit details and which branch it is currently on
+    - name: Git Checkout and Pull
+      shell: |
+        git checkout .
+        git pull
+        printf "\n"
+        echo "===Commit==="
+        git log -1
+        printf "\n"
+        echo "===Branch==="
+        git branch
+      args:
+        chdir: "{{ repo_name }}"
+      register: git_pull_result
+
+    - name: Display Git pull result
+      debug:
+        var: git_pull_result.stdout_lines
