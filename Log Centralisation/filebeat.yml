@@ -10,7 +10,8 @@ filebeat.inputs:
   paths:
     - /var/log/nginx/access.log
     #- c:\programdata\elasticsearch\logs\*
-  tags: ["project_name"]
+  fields:
+    project: test1
 
   output.logstash:
   # The Logstash hosts
