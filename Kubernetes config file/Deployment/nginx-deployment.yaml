@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-volume
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/my-pv"  #on pod or node?
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      name: pv-volume
+ 
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-pod
+spec:
+  selector:                   #[match app:nginx for deployment management]
+    matchLabels:
+      app: nginx
+  replicas: 2
+  template:                   #[image? for new pod based on app:ngix refer spec]
+    metadata:
+      labels:
+        app: nginx
+    spec:                     #[the container spec]
+      containers:
+      - name: nginx-new
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-deployment-pvc
+          mountPath: /etc/nginx/
+      volumes:              
+      - name: nginx-deployment-pvc
+        persistentVolumeClaim:
+          claimName: nginx-pvc
