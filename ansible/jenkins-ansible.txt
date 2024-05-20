@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+    stages {
+        stage('Git Pull') {
+            steps {
+                script {   
+                    def var = [target_server: 'server_name', 
+                                repo_name:  '/opt/repo']            
+                    dir('/etc/ansible') {
+                        ansiColor('xterm') {
+                            ansiblePlaybook(
+                                inventory: 'hosts/backend_stage.ini',
+                                playbook: 'playbook/git_pull_default.yml',
+                                extraVars: var
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+    options {
+            timeout(time: 5, unit: 'MINUTES')  // Adjust the time as needed
+    }
+}
+
