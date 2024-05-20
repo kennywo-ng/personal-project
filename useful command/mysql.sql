@@ -18,6 +18,7 @@ WHERE table_schema = 'db_name'
 ORDER BY `Size in MB` DESC 
 LIMIT 10;
 
+
 --mysqldump/export--
 mysqldump -h db_hostname -u admin -p db_schema --set-gtid-purged=OFF --compress --quick --triggers --routines --lock-tables=false --single-transaction > /opt/db/schema.sql
 

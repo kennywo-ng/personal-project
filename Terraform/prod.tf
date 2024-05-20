@@ -289,7 +289,7 @@ vpc_id = aws_vpc.Project_VPC.id
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["46.137.201.61/32"]
+    cidr_blocks = ["1.2.3.4/32"]
     description = "GHero VPN"
   }
 

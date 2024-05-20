@@ -36,6 +36,10 @@ journalctl --vacuum-time=7d
 #mysqlbinlog records
 mysqlbinlog --start-datetime="2024-01-29 12:00:00" --stop-datetime="2024-01-29 13:00:00" /var/lib/mysql/binlog.000532 | grep -i 'TRUNCATE'
 
+#first mysql setup
+grep "A temporary password" /var/log/mysqld.log
+mysql_secure_installation
+
 #yum
 yum repolist | grep php
 yum-config-manager
