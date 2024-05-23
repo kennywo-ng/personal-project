@@ -25,3 +25,12 @@ mysqldump -h db_hostname -u admin -p db_schema --set-gtid-purged=OFF --compress 
 --import into db--
 pv backup.sql | mysql -u username -p database_name
 
+--these can be configured on my.cnf
+--for binlog policy--
+SHOW VARIABLES LIKE 'binlog_expire_logs_seconds';
+SET GLOBAL binlog_expire_logs_seconds = 604800; -- 7 days in seconds
+FLUSH BINARY LOGS;
+
+--binlog size--
+SHOW VARIABLES LIKE 'max_binlog_size';
+SET GLOBAL max_binlog_size = 1073741824; --1GB
