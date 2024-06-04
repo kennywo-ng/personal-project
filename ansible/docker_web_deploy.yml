@@ -1,6 +1,6 @@
 ---
 - name: Git Pull and Docker Compose
-  hosts: "{{ target_server }}"
+  hosts: "{{ target_server }}"  #eg server1 from backend_stage.ini
   become: yes
   become_user: root
   tasks:
@@ -16,6 +16,7 @@
 
 
     #Set variable based on Stage and Prod
+    #inverntory_hostname = backend_stage.ini name of the server
     - name: Set var for Prod
       set_fact:
         docker_name1: "{{ inventory_hostname }}-web-1"
