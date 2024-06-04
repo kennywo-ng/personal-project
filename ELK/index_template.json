@@ -1,4 +1,4 @@
-#this is configured on kibana index lifecycle policy
+//this is configured on kibana index template
 {
     "index": {
       "lifecycle": {
