@@ -1,3 +1,5 @@
+##this is a jenkins pipeline using ansible playbook
+
 pipeline {
     agent any
     stages {
