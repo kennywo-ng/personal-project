@@ -17,10 +17,8 @@ terraform {
 1. This is configuration template for Production EC2 instance
 
 2. Run aws configure on local host terminal [For Access Key configuration]
-*only for first time access
 
 3. Create a key pair for new EC2 instace [If creating a new EC2 instance]
--Eg: abcde-stage [projectname-environment]
 
 4. Before running "terraform apply", changes need to be made for:
 -Variables
@@ -56,7 +54,7 @@ provider "aws" {
 
 ########################### VPC ############################
 resource "aws_vpc" "Project_VPC" {
-    cidr_block = "10.253.48.0/20"
+    cidr_block = "10.1.0.0/20"
     enable_dns_hostnames = true
     tags = {
         Name    = "${local.Project}_VPC"
@@ -102,7 +100,7 @@ resource "aws_route_table" "Project_RTB_PRIV" {
 //Public
 resource "aws_subnet" "Project_PUB_1A" {
   vpc_id            = aws_vpc.Project_VPC.id
-  cidr_block        = "10.253.48.0/24"
+  cidr_block        = "10.1.0.0/24"
   availability_zone = "ap-southeast-1a"
     tags = {
         Name    = "${local.Project}_PUB_1A"
@@ -110,7 +108,7 @@ resource "aws_subnet" "Project_PUB_1A" {
 }
 resource "aws_subnet" "Project_PUB_1B" {
   vpc_id            = aws_vpc.Project_VPC.id
-  cidr_block        = "10.253.50.0/24"
+  cidr_block        = "10.1.2.0/24"
   availability_zone = "ap-southeast-1b"
     tags = {
         Name    = "${local.Project}_PUB_1B"
@@ -118,7 +116,7 @@ resource "aws_subnet" "Project_PUB_1B" {
 }
 resource "aws_subnet" "Project_PUB_1C" {
   vpc_id            = aws_vpc.Project_VPC.id
-  cidr_block        = "10.253.52.0/24"
+  cidr_block        = "10.1.3.0/24"
   availability_zone = "ap-southeast-1c"
     tags = {
         Name    = "${local.Project}_PUB_1C"
@@ -128,7 +126,7 @@ resource "aws_subnet" "Project_PUB_1C" {
 //Private
 resource "aws_subnet" "Project_PRIV_1A" {
   vpc_id            = aws_vpc.Project_VPC.id
-  cidr_block        = "10.253.49.0/24"
+  cidr_block        = "10.1.1.0/24"
   availability_zone = "ap-southeast-1a"
     tags = {
         Name    = "${local.Project}_PRIV_1A"
@@ -136,7 +134,7 @@ resource "aws_subnet" "Project_PRIV_1A" {
 }
 resource "aws_subnet" "Project_PRIV_1B" {
   vpc_id            = aws_vpc.Project_VPC.id
-  cidr_block        = "10.253.51.0/24"
+  cidr_block        = "10.1.3.0/24"
   availability_zone = "ap-southeast-1b"
     tags = {
         Name    = "${local.Project}_PRIV_1B"
@@ -144,7 +142,7 @@ resource "aws_subnet" "Project_PRIV_1B" {
 }
 resource "aws_subnet" "Project_PRIV_1C" {
   vpc_id            = aws_vpc.Project_VPC.id
-  cidr_block        = "10.253.53.0/24"
+  cidr_block        = "10.1.5.0/24"
   availability_zone = "ap-southeast-1c"
     tags = {
         Name    = "${local.Project}_PRIV_1C"
@@ -294,11 +292,11 @@ vpc_id = aws_vpc.Project_VPC.id
   }
 
   ingress {
-    from_port = 3306
-    to_port   = 3306
-    protocol  = "tcp"
-    security_groups = ["${aws_security_group.Project_PROD_WEB_SCG.id}"]
-    description = "Script Server"
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["1.2.3.4/32"]
+    description = "BACKEND SERVER"
   }
 
 
@@ -387,7 +385,7 @@ resource "aws_instance" "Project_PROD_2" {
 
 
 ########################### Parameter Group ############################
-//Turn on performance schema manually
+//Turn on performance schema manually and restart
 resource "aws_db_parameter_group" "Project_RDS_Parameter_Group" {
   
   name    = "${local.Project_S}-prod-param-grp"
