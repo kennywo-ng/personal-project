@@ -1,3 +1,4 @@
+#this is configured on kibana index lifecycle policy
 {
     "index": {
       "lifecycle": {
