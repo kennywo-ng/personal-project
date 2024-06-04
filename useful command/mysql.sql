@@ -20,10 +20,12 @@ LIMIT 10;
 
 
 --mysqldump/export--
-mysqldump -h db_hostname -u admin -p db_schema --set-gtid-purged=OFF --compress --quick --triggers --routines --lock-tables=false --single-transaction > /opt/db/schema.sql
+mysqldump -h db_hostname -u admin -p db_schema db_table --set-gtid-purged=OFF --compress --quick --triggers --routines --lock-tables=false --single-transaction > /opt/db/schema.sql
 
 --import into db--
 pv backup.sql | mysql -u username -p database_name
+--or--
+mysql -u username -p database_name < schema.sql
 
 --these can be configured on my.cnf
 --for binlog policy--
