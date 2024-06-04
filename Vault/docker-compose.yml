@@ -1,0 +1,17 @@
+"vault.yml" 17L, 357B                                                                                                          10,34         All
+version: '3.7'
+
+services:
+  vault:
+    container_name: vault
+    image: hashicorp/vault:latest
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_ADDR: http://localhost:8200
+    cap_add:
+      - IPC_LOCK #Vault to lock memory, which prevents it from being swapped to disk
+    volumes:
+      - ./vault/config:/vault/config
+      - ./vault/file:/vault/file
+    command: "vault server -config=/vault/config/vault.hcl"
