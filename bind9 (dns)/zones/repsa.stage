@@ -1,0 +1,21 @@
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA      repsa.stage.  repsa.example.stage. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+; Name server record
+@             IN      NS      dns.repsa.stage.
+; A record for name server
+dns           IN      A       127.0.0.1
+; A record for clients
+ansible       IN      A       192.168.150.170
+aap-control1  IN      A       192.168.150.213
+aap-control2  IN      A       192.168.150.216
+aap-control3  IN      A       192.168.150.217
+aap-hub1      IN      A       192.168.150.211
+aap-postgres1 IN      A       192.168.150.212

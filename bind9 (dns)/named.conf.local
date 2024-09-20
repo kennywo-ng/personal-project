@@ -1,0 +1,13 @@
+//zone "localdomain" {
+//    type master;
+//    file "/etc/bind/db.localdomain";  // Create this file next
+//};
+
+zone "repsa.stage" IN {  //define the forward zone
+        type master;
+        file "/etc/bind/zones/repsa.stage";
+};
+zone "0.116.10.in-addr.arpa" IN {  //define the reverse zone
+        type master;
+        file "/etc/bind/zones/repsa.stage.rev";
+};
