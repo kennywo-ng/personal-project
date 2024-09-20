@@ -11,7 +11,7 @@ $TTL    604800
 ; Name server record
 @             IN      NS      dns.repsa.stage.
 ; A record for name server
-dns           IN      A       127.0.0.1
+dns           IN      A       192.168.150.222
 ; A record for clients
 ansible       IN      A       192.168.150.170
 aap-control1  IN      A       192.168.150.213
