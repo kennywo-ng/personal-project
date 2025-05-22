@@ -1,0 +1,7 @@
+#Think of this as var
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-config
+data:
+  mongo-url: mongo-service
